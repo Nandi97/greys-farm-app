@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {images: {
+const nextConfig = {
+	images: {
 		domains: [
 			'lh3.googleusercontent.com',
 			'avatars.githubusercontent.com',
@@ -15,6 +16,7 @@ const nextConfig = {images: {
 		// your project has type errors.
 		// !! WARN !!
 		ignoreBuildErrors: true,
-	},};
+	},
+};
 
 module.exports = nextConfig;
