@@ -65,3 +65,94 @@ model VerificationToken {
 
   @@unique([identifier, token])
 }
+
+model unitOfMeasurement {
+  id      Int    @id @default(autoincrement())
+  name    String
+  initial String
+
+  createdAt DateTime? @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime? @updatedAt @db.Timestamptz(3)
+  deletedAt DateTime? @db.Timestamptz(3)
+}
+
+model gender {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  createdAt DateTime? @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime? @updatedAt @db.Timestamptz(3)
+
+  animals animal[]
+}
+
+model menu {
+  id        Int    @id @default(autoincrement())
+  name      String
+  url       String
+  icon      String
+  listOrder Int
+
+  createdAt DateTime? @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime? @updatedAt @db.Timestamptz(3)
+}
+
+model animalType {
+  id   Int    @id @default(autoincrement())
+  name String
+  icon String
+
+  animalCategories animalCategory[]
+
+  createdAt DateTime? @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime? @updatedAt @db.Timestamptz(3)
+  deletedAt DateTime? @db.Timestamptz(3)
+}
+
+model animalCategory {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  animalTypeId Int?
+  animalType   animalType? @relation(fields: [animalTypeId], references: [id])
+
+  animalBreeds animalBreed[]
+
+  createdAt DateTime? @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime? @updatedAt @db.Timestamptz(3)
+  deletedAt DateTime? @db.Timestamptz(3)
+}
+
+model animalBreed {
+  id          Int    @id @default(autoincrement())
+  name        String
+  description String
+
+  animalCategoryId Int?
+  animalCategory   animalCategory? @relation(fields: [animalCategoryId], references: [id])
+
+  createdAt DateTime? @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime? @updatedAt @db.Timestamptz(3)
+  deletedAt DateTime? @db.Timestamptz(3)
+
+  animals animal[]
+}
+
+model animal {
+  id     Int     @id @default(autoincrement())
+  tag    String
+  image  String?
+  status Boolean @default(false)
+
+  genderId Int
+  gender   gender @relation(fields: [genderId], references: [id])
+
+  animalBreedId Int
+  animalBreed   animalBreed @relation(fields: [animalBreedId], references: [id])
+
+  bornAt      DateTime? @db.Timestamptz(3)
+  purchasedAt DateTime? @db.Timestamptz(3)
+  createdAt   DateTime? @default(now()) @db.Timestamptz(3)
+  updatedAt   DateTime? @updatedAt @db.Timestamptz(3)
+  deletedAt   DateTime? @db.Timestamptz(3)
+}

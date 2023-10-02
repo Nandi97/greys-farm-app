@@ -5,6 +5,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import Logged from './Logged';
 import Login from './Login';
+import NavMenu from './NavMenu';
 
 export async function getSessionData() {
 	const session = await getServerSession(authOptions);
@@ -15,9 +16,9 @@ export async function getSessionData() {
 export default async function Nav() {
 	const session = await getSessionData();
 	return (
-		<nav className="w-full shadow-md shadow-slate-400 bg-primary-400/30 h-10 justify-between p-1 flex items-center px-3">
-			<div className="flex items-center flex-shrink-0 divide-x divide-secondary-300">
-				<Link href={`/`} className="flex items-center px-2">
+		<nav className="w-full shadow-md  bg-box-four-light h-10 justify-between p-1 flex items-center px-3">
+			<div className="flex items-center flex-shrink-0 divide-x divide-box-three-light justify-center">
+				<Link href={`/`} className="flex items-center justify-center px-2">
 					<Image
 						height={64}
 						width={64}
@@ -26,10 +27,15 @@ export default async function Nav() {
 						alt="OCO Logo"
 					/>
 					<div className="inline-flex items-center text-sm font-medium">
-						<span className="text-primary-600">Grey&apos;s</span>
-						<span className="text-secondary-600">Farm</span>
+						<span className="text-text-primary-light">Grey&apos;s</span>
+						<span className="text-text-secondary-light">Farm</span>
 					</div>
 				</Link>
+				{session?.user && (
+					<div className="pt-1">
+						<NavMenu />
+					</div>
+				)}
 			</div>
 			<div className="flex space-x-2 items-center justify-center h-full">
 				{!session?.user && <Login />}

@@ -8,26 +8,28 @@ import { Fragment, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 
 type User = {
-	image: string;
-	name: string;
+	image?: string;
+	name?: string;
 	designation?: string;
 };
 
 export default function Logged({ image, name, designation }: User) {
 	return (
 		<>
-			<div className="text-right inline-flex items-center  bg-white rounded-lg bg-opacity-0">
+			<div className="text-right inline-flex items-center  bg-box-four-light rounded-lg bg-opacity-0">
 				<Menu as="div" className="relative inline-block text-left">
 					<div>
-						<Menu.Button className="inline-flex w-full justify-center items-center rounded-md text-sm font-medium text-white  focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+						<Menu.Button className="inline-flex w-full justify-center items-center rounded-md text-sm font-medium text-text-primary-light  focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-light focus-visible:ring-opacity-75">
 							{!image ? (
-								<span className="inline-flex items-center justify-center rounded-full h-6 w-6 bg-secondary-50 border-secondary-500 border-2 text-secondary-500 hover:bg-secondary-500 hover:text-secondary-50">
-									<span className="font-sm leading-none ">
-										{name
-											.split(' ')
-											.map((n) => n[0])
-											.join('')}
-									</span>
+								<span className="inline-flex items-center justify-center rounded-full h-6 w-6 bg-secondary-50 border-brand-light border-2 text-brand-light hover:bg-brand-light hover:text-brand-light">
+									{name && (
+										<span className="font-sm leading-none">
+											{name
+												.split(' ')
+												.map((n) => n[0])
+												.join('')}
+										</span>
+									)}
 								</span>
 							) : (
 								<Image
@@ -35,7 +37,7 @@ export default function Logged({ image, name, designation }: User) {
 									width={20}
 									height={20}
 									alt="User Avatar"
-									className="object-contain w-6 h-6 p-px border-2 rounded-full border-secondary-50 hover:border-secondary-400"
+									className="object-contain w-6 h-6 p-px border-2 rounded-full border-brand-light hover:border-brand-light/70"
 								/>
 							)}
 						</Menu.Button>

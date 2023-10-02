@@ -21,7 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 	return (
 		<html lang="en">
 			<body
-				className={` ${roboto.variable} h-screen font-sans bg-gradient-to-br from-accent-100 via-primary-100 to-accent-100 overflow-hidden`}
+				className={` ${roboto.variable} h-screen font-sans  bg-light-background overflow-hidden`}
 			>
 				<QueryWrapper>
 					<AuthContext>
