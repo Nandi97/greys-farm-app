@@ -26,7 +26,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 				<QueryWrapper>
 					<AuthContext>
 						<Nav />
-						<div className="mx-auto px-8 py-4 h-screen overflow-y-auto">{children}</div>
+						<div className="mx-auto px-8 py-4 mb-4 h-screen overflow-y-auto">
+							{children}
+						</div>
 					</AuthContext>
 				</QueryWrapper>
 			</body>
