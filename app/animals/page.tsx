@@ -41,36 +41,16 @@ export default function Dashboard() {
 						))}
 					</Tab.List>
 					<Tab.Panels className="mt-2">
-						<Tab.Panel
-							className={classNames(
-								'rounded-xl bg-white p-3',
-								'ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2'
-							)}
-						>
+						<Tab.Panel className={classNames('rounded-xl bg-white p-3')}>
 							<AnimalTab />
 						</Tab.Panel>
-						<Tab.Panel
-							className={classNames(
-								'rounded-xl bg-white p-3',
-								'ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2'
-							)}
-						>
+						<Tab.Panel className={classNames('rounded-xl bg-white p-3')}>
 							<BreedTab />
 						</Tab.Panel>
-						<Tab.Panel
-							className={classNames(
-								'rounded-xl bg-white p-3',
-								'ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2'
-							)}
-						>
+						<Tab.Panel className={classNames('rounded-xl bg-white p-3')}>
 							<CategoryTab />
 						</Tab.Panel>
-						<Tab.Panel
-							className={classNames(
-								'rounded-xl bg-white p-3',
-								'ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2'
-							)}
-						>
+						<Tab.Panel className={classNames('rounded-xl bg-white p-3')}>
 							<TypeTab />
 						</Tab.Panel>
 					</Tab.Panels>

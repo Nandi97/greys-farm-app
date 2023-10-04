@@ -20,6 +20,7 @@
 		"prettier-plugin-tailwindcss": "^0.5.4",
 		"react": "latest",
 		"react-dom": "latest",
+		"react-hook-form": "^7.47.0",
 		"react-hot-toast": "^2.4.1"
 	},
 	"devDependencies": {

@@ -57,15 +57,26 @@ export default function OptDropdown({ optBtn, optionsList }: SearchInputProps) {
 					<Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-ocoblue-400 rounded-md bg-box-four-light shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-30">
 						<div className="px-1 py-1 ">
 							{optionsList?.map((item, i) => (
-								<Menu.Item key={`option-item-${i}`}>
-									{!item.link ? (
+								<Menu.Item
+									key={`option-item-${i}`}
+									as={!item.link ? 'button' : 'a'}
+									className={`flex items-center col-span-1 p-2 space-x-2 text-text-primary-light  hover:bg-box-two-light rounded-md  w-full px-4 py-2  text-xs transition-all duration-300 group`}
+									onClick={() => handleClick(item)}
+									href={item?.link}
+								>
+									{/* {!item.link ? (
 										<button
 											type="button"
 											className="flex items-center w-full px-4 py-2 space-x-2 text-xs transition-all duration-300 rounded group text-text-primary-light  hover:bg-box-two-light hover:bg-opacity-20"
 											onClick={() => handleClick(item)}
 										>
-											<Icon icon={String(item?.icon)} className="text-lg" />
-											<span>{item?.name}</span>
+											<Icon
+												icon={String(item?.icon)}
+												className="text-xl rounded-md"
+											/>
+											<span className="text-xs text-center">
+												{item?.name}
+											</span>
 										</button>
 									) : (
 										<Link
@@ -73,10 +84,18 @@ export default function OptDropdown({ optBtn, optionsList }: SearchInputProps) {
 											target="_blank"
 											className="flex items-center w-full px-4 py-2 space-x-2 text-xs transition-all duration-300 rounded group text-text-primary-light  hover:bg-box-two-light hover:bg-opacity-20"
 										>
-											<Icon icon={String(item?.icon)} className="text-lg" />
+											<Icon
+												icon={String(item?.icon)}
+												className="text-xl rounded-md"
+											/>
 											<span>{item?.name}</span>
 										</Link>
-									)}
+									)} */}
+									<Icon
+										icon={String(item?.icon)}
+										className="text-xl rounded-md"
+									/>
+									<span className="text-xs text-center">{item?.name}</span>
 								</Menu.Item>
 							))}
 						</div>
