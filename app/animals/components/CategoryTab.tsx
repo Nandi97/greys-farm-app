@@ -144,11 +144,12 @@ export default function CategoryTab() {
 												<td className="p-4 text-start">{item?.name}</td>
 												<td className="p-4 text-start flex items-center space-x-2">
 													<button
+														className="text-green-600 text-lg"
 														onClick={() => editAnimalCategory(item?.id)}
 													>
 														<Icon icon="heroicons:pencil-square" />
 													</button>
-													<button>
+													<button className="text-red-600 text-lg">
 														<Icon icon="heroicons:trash" />
 													</button>
 												</td>
@@ -165,7 +166,18 @@ export default function CategoryTab() {
 											<div className="col-span-4 flex justify-between font-semibold">
 												<span>Name</span> <span>:</span>
 											</div>
-											<span className="col-span-8">{item?.name}</span>
+											<span className="col-span-4">{item?.name}</span>
+											<div className="col-span-4 flex items-center w-full space-x-4">
+												<button
+													className="text-green-600 text-lg"
+													onClick={() => editAnimalCategory(item?.id)}
+												>
+													<Icon icon="heroicons:pencil-square" />
+												</button>
+												<button className="text-red-600 text-lg">
+													<Icon icon="heroicons:trash" />
+												</button>
+											</div>
 										</div>
 									</div>
 								))}
