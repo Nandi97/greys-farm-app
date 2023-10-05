@@ -5,6 +5,8 @@ import { usePathname } from 'next/navigation';
 import { Tab } from '@headlessui/react';
 import CreateCategoryToggle from '../animal-categories/create/CreateCategory';
 import { useState } from 'react';
+import { Icon } from '@iconify/react/dist/iconify.js';
+import EditCategoryToggle from '../animal-categories/[slug]/edit/EditCategory';
 
 function classNames(...classes: any) {
 	return classes.filter(Boolean).join(' ');
@@ -32,6 +34,8 @@ const allAnimalCategories = async () => {
 
 export default function CategoryTab() {
 	const [createToggle, setCreateToggle] = useState(false);
+	const [editToggle, setEditToggle] = useState(false);
+	const [categoryId, setCategoryId] = useState(0);
 	const pathname = usePathname();
 	const { data } = useQuery({
 		queryFn: allAnimalCategories,
@@ -59,12 +63,20 @@ export default function CategoryTab() {
 	};
 	// Header Dropdown
 	const headerOptBtnTxt = {
-		icon: 'heroicons:ellipsis-vertical',
-		// name: 'Options',
+		icon: 'heroicons:chevron-down',
+		name: 'Options',
 		buttonClassName:
-			'inline-flex w-full items-center justify-center rounded-md text-sm font-medium text-text-primary-light   focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75',
+			'inline-flex w-full items-center justify-center rounded-md text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 rounded-md shadow text-box-four-light bg-text-primary-light hover:bg-text-secondary-light p-2',
 		iconClassName:
 			'object-contain p-px text-xl  border-opacity-30 hover:bg-box-four-light rounded-md',
+	};
+	const editAnimalCategory = (animalCategoryId: number) => {
+		setCategoryId(animalCategoryId);
+		setEditToggle(true);
+		// const selectedStaff = data?.data.find((person) => person.id === staffId);
+		// setStaffDetails(selectedStaff || null);
+
+		// console.log('edit Staff Member:', animalCategoryId);
 	};
 
 	const headerOptionsList = [
@@ -77,13 +89,13 @@ export default function CategoryTab() {
 	return (
 		<>
 			<div className="w-full flex justify-between items-center border-b py-1">
-				<span>Animal Categories</span>
+				<span className="text-text-primary-light font-medium">Animal Categories</span>
 				<div className="flex items-center space-x-1 px-4">
 					<OptDropdown optBtn={headerOptBtnTxt} optionsList={headerOptionsList} />
 				</div>
 			</div>
 			<div className="overflow-y-auto p-2 flex flex-col md:flex-row">
-				<Tab.Group vertical defaultIndex={1}>
+				<Tab.Group vertical defaultIndex={0}>
 					<Tab.List className="flex md:w-2/12 md:flex-col space-x-1 md:rounded-l-xl rounded-xl bg-box-four-light p-1">
 						{Object.keys(groupedData).map((item) => (
 							<Tab
@@ -114,6 +126,7 @@ export default function CategoryTab() {
 											<th scope="col" className="p-3">
 												Name
 											</th>
+											<th scope="col" className="p-3"></th>
 										</tr>
 									</thead>
 									<tbody>
@@ -129,6 +142,16 @@ export default function CategoryTab() {
 													{idx + 1}
 												</th>
 												<td className="p-4 text-start">{item?.name}</td>
+												<td className="p-4 text-start flex items-center space-x-2">
+													<button
+														onClick={() => editAnimalCategory(item?.id)}
+													>
+														<Icon icon="heroicons:pencil-square" />
+													</button>
+													<button>
+														<Icon icon="heroicons:trash" />
+													</button>
+												</td>
 											</tr>
 										))}
 									</tbody>
@@ -152,6 +175,7 @@ export default function CategoryTab() {
 				</Tab.Group>
 			</div>
 			{createToggle && <CreateCategoryToggle setToggle={setCreateToggle} />}
+			{editToggle && <EditCategoryToggle setToggle={setEditToggle} url={categoryId} />}
 		</>
 	);
 }

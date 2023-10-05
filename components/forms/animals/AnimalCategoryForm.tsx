@@ -1,10 +1,15 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
+import { useEffect } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 
 interface AnimalCategoryForm {
 	typeId: number;
 	categoryName: string;
+}
+interface AnimalCategoryFormProps {
+	onSubmit: SubmitHandler<AnimalCategoryForm>;
+	initialValues?: AnimalCategoryForm;
 }
 
 const allAnimalTypes = async () => {
@@ -12,16 +17,31 @@ const allAnimalTypes = async () => {
 	return response.data;
 };
 
-export default function AnimalCategoryForm() {
-	const { register, handleSubmit } = useForm<AnimalCategoryForm>();
-	const onSubmit: SubmitHandler<AnimalCategoryForm> = (data) => console.log(data);
+export default function AnimalCategoryForm({ onSubmit, initialValues }: AnimalCategoryFormProps) {
+	const { register, handleSubmit, setValue } = useForm<AnimalCategoryForm>({
+		defaultValues: initialValues, // Set default values for editing
+	});
 
 	const { data } = useQuery({
 		queryFn: allAnimalTypes,
 		queryKey: ['animalTypes'],
 	});
+
+	useEffect(() => {
+		if (initialValues) {
+			// Set default values for editing
+			setValue('typeId', initialValues.typeId);
+			setValue('categoryName', initialValues.categoryName);
+		}
+	}, [initialValues, setValue]);
+
+	const handleSubmitForm: SubmitHandler<AnimalCategoryForm> = (data) => {
+		onSubmit(data);
+
+		console.log(data);
+	};
 	return (
-		<form onSubmit={handleSubmit(onSubmit)}>
+		<form onSubmit={handleSubmit(handleSubmitForm)}>
 			<div className="flex flex-col space-y-2">
 				<div>
 					<label
@@ -49,7 +69,7 @@ export default function AnimalCategoryForm() {
 						htmlFor="categoryName"
 						className="block text-sm font-medium text-text-primary-light"
 					>
-						Title
+						Category Name
 					</label>
 					<input
 						type="text"

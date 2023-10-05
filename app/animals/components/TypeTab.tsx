@@ -21,7 +21,7 @@ export default function TypeTab() {
 	return (
 		<>
 			<div className="w-full flex justify-between items-center border-b py-1">
-				<span>Animal Types</span>
+				<span className="text-text-primary-light font-medium">Animal Types</span>
 			</div>
 			<div className="overflow-x-auto p-2">
 				<table className="text-sm text-left text-gray-500 border rounded-lg">

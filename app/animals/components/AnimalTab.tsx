@@ -8,10 +8,10 @@ export default function AnimalTab() {
 
 	// Header Dropdown
 	const headerOptBtnTxt = {
-		icon: 'heroicons:ellipsis-vertical',
-		// name: 'Options',
+		icon: 'heroicons:chevron-down',
+		name: 'Options',
 		buttonClassName:
-			'inline-flex w-full items-center justify-center rounded-md text-sm font-medium text-text-primary-light   focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75',
+			'inline-flex w-full items-center justify-center rounded-md text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 rounded-md shadow text-box-four-light bg-text-primary-light hover:bg-text-secondary-light p-2',
 		iconClassName:
 			'object-contain p-px text-xl  border-opacity-30 hover:bg-box-four-light rounded-md',
 	};
