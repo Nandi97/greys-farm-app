@@ -5,6 +5,9 @@ import { useState } from 'react';
 import { Tab } from '@headlessui/react';
 import OptDropdown from '@/components/custom-ui/OptDropdown';
 import { usePathname } from 'next/navigation';
+import CreateBreedToggle from '../animal-breeds/create/CreateBreed';
+import { Icon } from '@iconify/react/dist/iconify.js';
+import EditBreedToggle from '../animal-breeds/[slug]/edit/EditBreed';
 
 function classNames(...classes: any) {
 	return classes.filter(Boolean).join(' ');
@@ -37,13 +40,15 @@ const allAnimalBreeds = async () => {
 };
 
 export default function BreedTab() {
+	const [createToggle, setCreateToggle] = useState(false);
+	const [editToggle, setEditToggle] = useState(false);
+	const [breedId, setBreedId] = useState(0);
 	const pathname = usePathname();
 	const { data: breeds } = useQuery({
 		queryFn: allAnimalBreeds,
 		queryKey: ['animalBreeds'],
 	});
 
-	// console.log('Animal Breeds:', breeds);
 	//
 	const groupedData: GroupedData = {};
 
@@ -58,7 +63,15 @@ export default function BreedTab() {
 			groupedData[categoryName].push(breed);
 		}
 	});
+	const newAnimalBreed = () => {
+		console.log('New Animal Breed');
 
+		setCreateToggle(true);
+	};
+	const editAnimalBreed = (animalBreedId: number) => {
+		setBreedId(animalBreedId);
+		setEditToggle(true);
+	};
 	// Header Dropdown
 	const headerOptBtnTxt = {
 		icon: 'heroicons:chevron-down',
@@ -72,7 +85,7 @@ export default function BreedTab() {
 	const headerOptionsList = [
 		{
 			name: 'New Animal Breed',
-			link: `${pathname}/animal-breeds/create`,
+			action: newAnimalBreed,
 			icon: 'heroicons:plus',
 		},
 	];
@@ -119,6 +132,7 @@ export default function BreedTab() {
 											<th scope="col" className="p-3">
 												Description
 											</th>
+											<th scope="col" className="p-3"></th>
 										</tr>
 									</thead>
 									<tbody>
@@ -136,6 +150,17 @@ export default function BreedTab() {
 												<td className="p-4 text-start">{item?.name}</td>
 												<td className="p-4 text-justify">
 													{item?.description}
+												</td>
+												<td className="p-4 text-start flex items-center space-x-2">
+													<button
+														className="text-green-600 text-lg"
+														onClick={() => editAnimalBreed(item?.id)}
+													>
+														<Icon icon="heroicons:pencil-square" />
+													</button>
+													<button className="text-red-600 text-lg">
+														<Icon icon="heroicons:trash" />
+													</button>
 												</td>
 											</tr>
 										))}
@@ -165,6 +190,8 @@ export default function BreedTab() {
 					</Tab.Panels>
 				</Tab.Group>
 			</div>
+			{createToggle && <CreateBreedToggle setToggle={setCreateToggle} />}
+			{editToggle && <EditBreedToggle setToggle={setEditToggle} url={breedId} />}
 		</>
 	);
 }

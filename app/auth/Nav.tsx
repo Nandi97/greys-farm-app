@@ -9,7 +9,6 @@ import NavMenu from './NavMenu';
 
 export async function getSessionData() {
 	const session = await getServerSession(authOptions);
-	// console.log(session);
 	return session;
 }
 

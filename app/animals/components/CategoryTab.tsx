@@ -61,6 +61,10 @@ export default function CategoryTab() {
 
 		setCreateToggle(true);
 	};
+	const editAnimalCategory = (animalCategoryId: number) => {
+		setCategoryId(animalCategoryId);
+		setEditToggle(true);
+	};
 	// Header Dropdown
 	const headerOptBtnTxt = {
 		icon: 'heroicons:chevron-down',
@@ -69,14 +73,6 @@ export default function CategoryTab() {
 			'inline-flex w-full items-center justify-center rounded-md text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 rounded-md shadow text-box-four-light bg-text-primary-light hover:bg-text-secondary-light p-2',
 		iconClassName:
 			'object-contain p-px text-xl  border-opacity-30 hover:bg-box-four-light rounded-md',
-	};
-	const editAnimalCategory = (animalCategoryId: number) => {
-		setCategoryId(animalCategoryId);
-		setEditToggle(true);
-		// const selectedStaff = data?.data.find((person) => person.id === staffId);
-		// setStaffDetails(selectedStaff || null);
-
-		// console.log('edit Staff Member:', animalCategoryId);
 	};
 
 	const headerOptionsList = [

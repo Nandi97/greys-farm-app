@@ -37,8 +37,6 @@ export default function AnimalCategoryForm({ onSubmit, initialValues }: AnimalCa
 
 	const handleSubmitForm: SubmitHandler<AnimalCategoryForm> = (data) => {
 		onSubmit(data);
-
-		console.log(data);
 	};
 	return (
 		<form onSubmit={handleSubmit(handleSubmitForm)}>

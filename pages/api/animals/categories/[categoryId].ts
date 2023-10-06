@@ -6,7 +6,6 @@ import { authOptions } from '../../auth/[...nextauth]';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 	if (req.method === 'GET') {
 		try {
-			// console.log('Req Query', req.query);
 			const categoryId = Array.isArray(req.query.categoryId)
 				? parseInt(req.query.categoryId[0], 10)
 				: parseInt(req.query.categoryId, 10);
