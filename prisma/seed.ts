@@ -5,16 +5,20 @@ import { getMenus } from './seeders/menus';
 import { getAnimalTypes } from './seeders/animalTypes';
 import { getAnimalCategories } from './seeders/animalCategories';
 import { getAnimalBreeds } from './seeders/animalBreeds';
+import { getBreedingMethods } from './seeders/breedingMethod';
+import { getGenders } from './seeders/genders';
 
 const prisma = new PrismaClient();
 
 async function main() {
 	const menus = getMenus();
 	const roles = getRoles();
+	const genders = getGenders();
 	const uoms = getUOMs();
 	const animalTypes = getAnimalTypes();
 	const animalCategories = getAnimalCategories();
 	const animalBreeds = getAnimalBreeds();
+	const breedingMethods = getBreedingMethods();
 
 	// Menus
 	for (const menu of menus) {
@@ -38,6 +42,17 @@ async function main() {
 			create: {
 				name: role.name,
 				description: role.description,
+			},
+		});
+	}
+
+	// Genders
+	for (const gender of genders) {
+		await prisma.gender.upsert({
+			where: { id: gender.id },
+			update: { name: gender.name },
+			create: {
+				name: gender.name,
 			},
 		});
 	}
@@ -82,6 +97,21 @@ async function main() {
 				name: animalBreed.name,
 				description: animalBreed.description,
 				animalCategoryId: animalBreed.animalCategoryId,
+			},
+		});
+	}
+
+	// Breeding methods
+	for (const breedingMethod of breedingMethods) {
+		await prisma.breedingMethod.upsert({
+			where: { id: breedingMethod.id },
+			update: {
+				name: breedingMethod.name,
+				description: breedingMethod.description,
+			},
+			create: {
+				name: breedingMethod.name,
+				description: breedingMethod.description,
 			},
 		});
 	}

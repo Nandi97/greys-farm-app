@@ -71,9 +71,12 @@ model unitOfMeasurement {
   name    String
   initial String
 
-  createdAt DateTime? @default(now()) @db.Timestamptz(3)
-  updatedAt DateTime? @updatedAt @db.Timestamptz(3)
-  deletedAt DateTime? @db.Timestamptz(3)
+  createdAt       DateTime?        @default(now()) @db.Timestamptz(3)
+  updatedAt       DateTime?        @updatedAt @db.Timestamptz(3)
+  deletedAt       DateTime?        @db.Timestamptz(3)
+  milkProductions milkProduction[]
+  treatments      treatment[]
+  animals         animal[]
 }
 
 model gender {
@@ -138,6 +141,49 @@ model animalBreed {
   animals animal[]
 }
 
+model treatment {
+  id       Int    @id @default(autoincrement())
+  animalId Int // ID of the animal to which this treatment is related
+  animal   animal @relation(fields: [animalId], references: [id])
+
+  treatmentDate DateTime // Date when the treatment was administered
+  treatmentType String // Type of treatment (e.g., vaccination, medication, etc.)
+  dosage        Float? // Dosage or amount of the treatment administered
+  unitId        Int
+  uom           unitOfMeasurement @relation(fields: [unitId], references: [id])
+  notes         String? // Additional notes or comments about the treatment
+
+  createdAt DateTime? @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime? @updatedAt @db.Timestamptz(3)
+  deletedAt DateTime? @db.Timestamptz(3)
+}
+
+model milkProduction {
+  id             Int               @id @default(autoincrement())
+  animalId       Int // ID of the animal to which this treatment is related
+  animal         animal            @relation(fields: [animalId], references: [id])
+  productionDate DateTime?
+  quantity       Float
+  unitId         Int
+  uom            unitOfMeasurement @relation(fields: [unitId], references: [id])
+
+  createdAt DateTime? @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime? @updatedAt @db.Timestamptz(3)
+  deletedAt DateTime? @db.Timestamptz(3)
+}
+
+model location {
+  id       Int    @id @default(autoincrement())
+  name     String
+  markerId String @unique
+
+  animal animal[]
+
+  createdAt DateTime? @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime? @updatedAt @db.Timestamptz(3)
+  deletedAt DateTime? @db.Timestamptz(3)
+}
+
 model animal {
   id     Int     @id @default(autoincrement())
   tag    String
@@ -147,12 +193,84 @@ model animal {
   genderId Int
   gender   gender @relation(fields: [genderId], references: [id])
 
-  animalBreedId Int
-  animalBreed   animalBreed @relation(fields: [animalBreedId], references: [id])
+  breedId     Int
+  animalBreed animalBreed @relation(fields: [breedId], references: [id])
 
-  bornAt      DateTime? @db.Timestamptz(3)
-  purchasedAt DateTime? @db.Timestamptz(3)
-  createdAt   DateTime? @default(now()) @db.Timestamptz(3)
-  updatedAt   DateTime? @updatedAt @db.Timestamptz(3)
-  deletedAt   DateTime? @db.Timestamptz(3)
+  isPregnant       Boolean   @default(false)
+  pregnancyDueDate DateTime?
+
+  lastCalvingDate DateTime?
+  calvingInterval Int?
+
+  healthRecord String?
+  treatments   treatment[]
+
+  milkProductionRecords milkProduction[]
+
+  birthWeight  Float?
+  weightRecord weightRecord[]
+  growthRate   Float?
+  weightUnitId Int
+  weightUnit   unitOfMeasurement @relation(fields: [weightUnitId], references: [id])
+
+  breedingHistory breeding[]
+
+  sireId Int?
+  sire   animal? @relation("sires", fields: [sireId], references: [id])
+  damId  Int?
+  dam    animal? @relation("dams", fields: [damId], references: [id])
+
+  locationId Int?
+  location   location? @relation(fields: [locationId], references: [id])
+
+  bornAt      DateTime?  @db.Timestamptz(3)
+  purchasedAt DateTime?  @db.Timestamptz(3)
+  createdAt   DateTime?  @default(now()) @db.Timestamptz(3)
+  updatedAt   DateTime?  @updatedAt @db.Timestamptz(3)
+  deletedAt   DateTime?  @db.Timestamptz(3)
+  cow         breeding[] @relation(name: "female_cow")
+  bull        breeding[] @relation(name: "male_cow")
+  sires       animal[]   @relation(name: "sires")
+  dams        animal[]   @relation(name: "dams")
+}
+
+model weightRecord {
+  id              Int       @id @default(autoincrement())
+  animalId        Int
+  animal          animal    @relation(fields: [animalId], references: [id])
+  weight          Float // Weight of the animal at this record
+  measurementDate DateTime // Date when the weight was recorded
+  createdAt       DateTime? @default(now()) @db.Timestamptz(3)
+  updatedAt       DateTime? @updatedAt @db.Timestamptz(3)
+  deletedAt       DateTime? @db.Timestamptz(3)
+}
+
+model breedingMethod {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String?
+
+  createdAt DateTime?  @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime?  @updatedAt @db.Timestamptz(3)
+  deletedAt DateTime?  @db.Timestamptz(3)
+  breeding  breeding[]
+}
+
+model breeding {
+  id    Int    @id @default(autoincrement())
+  cowId Int // ID of the animal involved in the breeding event
+  cow   animal @relation(name: "female_cow", fields: [cowId], references: [id])
+
+  matingDate       DateTime // Date of the mating/breeding event
+  bullId           Int
+  bull             animal         @relation(name: "male_cow", fields: [bullId], references: [id]) // Details of the bull used for breeding
+  breedingMethodId Int // Type of breeding (e.g., natural, artificial insemination, etc.)
+  breedingMethod   breedingMethod @relation(fields: [breedingMethodId], references: [id])
+  pregnancy        Boolean?       @default(true)
+
+  createdAt DateTime? @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime? @updatedAt @db.Timestamptz(3)
+  deletedAt DateTime? @db.Timestamptz(3)
+  animal    animal?   @relation(fields: [animalId], references: [id])
+  animalId  Int?
 }

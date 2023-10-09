@@ -1,9 +1,15 @@
 import OptDropdown from '@/components/custom-ui/OptDropdown';
 import SearchInput from '@/components/custom-ui/SearchInput';
+import CreateAnimalToggle from '../create/CreateAnimal';
+import { useState } from 'react';
 
 export default function AnimalTab() {
+	const [createToggle, setCreateToggle] = useState(false);
+	const [editToggle, setEditToggle] = useState(false);
 	const newAnimal = () => {
-		console.log('new Animal');
+		// console.log('new Animal');
+
+		setCreateToggle(true);
 	};
 
 	// Header Dropdown
@@ -16,16 +22,18 @@ export default function AnimalTab() {
 			'object-contain p-px text-xl  border-opacity-30 hover:bg-box-four-light rounded-md',
 	};
 
-	const headerOptionsList = [
-		{ name: 'New Staff Member', action: newAnimal, icon: 'heroicons:plus' },
-	];
+	const headerOptionsList = [{ name: 'New Animal', action: newAnimal, icon: 'heroicons:plus' }];
 	return (
-		<div className="w-full flex justify-between items-center border-b py-1">
-			<span>Animals</span>
-			<div className="flex items-center space-x-1 px-4">
-				{/* <SearchInput /> */}
-				<OptDropdown optBtn={headerOptBtnTxt} optionsList={headerOptionsList} />
+		<>
+			<div className="w-full flex justify-between items-center border-b py-1">
+				<span className="text-text-primary-light font-medium">Animal Breeds</span>
+				<div className="flex items-center space-x-1 px-4">
+					<OptDropdown optBtn={headerOptBtnTxt} optionsList={headerOptionsList} />
+				</div>
 			</div>
-		</div>
+			<div className="overflow-y-auto p-2 flex flex-col md:flex-row"></div>
+
+			{createToggle && <CreateAnimalToggle setToggle={setCreateToggle} />}
+		</>
 	);
 }
