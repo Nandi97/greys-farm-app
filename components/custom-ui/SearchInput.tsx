@@ -28,7 +28,7 @@ export default function SearchInput({ onSearch }: any) {
 					name="search"
 					id="search"
 					placeholder="Search..."
-					className="h-full w-full bg-box-two-light bg-opacity-70 border-1 border-ocoblue-300 shadow-inner shadow-accent-300 text-xs pl-8 focus:ring-text-primary-light border text-text-primary-light rounded-lg  focus:border-text-secondary-light block p-2.5"
+					className="h-full w-full bg-box-two-light bg-opacity-70 border-1 border-text-secondary-light shadow-inner shadow-accent-300 text-xs pl-8 focus:ring-text-primary-light border text-text-primary-light rounded-lg  focus:border-text-secondary-light block p-2.5"
 					value={searchInput}
 					onChange={handleInputChange}
 				/>

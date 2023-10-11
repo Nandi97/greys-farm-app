@@ -2,10 +2,24 @@ import OptDropdown from '@/components/custom-ui/OptDropdown';
 import SearchInput from '@/components/custom-ui/SearchInput';
 import CreateAnimalToggle from '../create/CreateAnimal';
 import { useState } from 'react';
+import AnimalTable from './AnimalTable';
+import axios from 'axios';
+import { useQuery } from '@tanstack/react-query';
 
+const allAnimals = async () => {
+	const response = await axios.get('/api/animals/get');
+	return response.data;
+};
 export default function AnimalTab() {
 	const [createToggle, setCreateToggle] = useState(false);
 	const [editToggle, setEditToggle] = useState(false);
+	const [searchParam, setSearchParam] = useState<string | null>(null);
+
+	const { data: animals } = useQuery({
+		queryFn: allAnimals,
+		queryKey: ['animals'],
+	});
+
 	const newAnimal = () => {
 		// console.log('new Animal');
 
@@ -23,15 +37,22 @@ export default function AnimalTab() {
 	};
 
 	const headerOptionsList = [{ name: 'New Animal', action: newAnimal, icon: 'heroicons:plus' }];
+
+	const handleSearch = (searchInput: any) => {
+		setSearchParam(searchInput);
+	};
 	return (
 		<>
 			<div className="w-full flex justify-between items-center border-b py-1">
-				<span className="text-text-primary-light font-medium">Animal Breeds</span>
+				<span className="text-text-primary-light font-medium">Animal</span>
 				<div className="flex items-center space-x-1 px-4">
+					<SearchInput onSearch={handleSearch} />
 					<OptDropdown optBtn={headerOptBtnTxt} optionsList={headerOptionsList} />
 				</div>
 			</div>
-			<div className="overflow-y-auto p-2 flex flex-col md:flex-row"></div>
+			<div className="overflow-y-auto p-2 flex flex-col md:flex-row">
+				<AnimalTable data={animals} />
+			</div>
 
 			{createToggle && <CreateAnimalToggle setToggle={setCreateToggle} />}
 		</>

@@ -28,6 +28,6 @@
 		"**/*.tsx",
 		".next/types/**/*.ts",
 		"pages/api/menus/getMenus.ts"
-	],
+, "components/custom-ui/forms/InputField.jsx"	],
 	"exclude": ["node_modules"]
 }

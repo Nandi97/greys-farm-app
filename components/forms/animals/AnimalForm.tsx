@@ -4,6 +4,8 @@ import { useRef, useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
+import { Icon } from '@iconify/react/dist/iconify.js';
+import FormInputAlert from '@/components/custom-ui/FormFieldAlert';
 
 interface AnimalForm {
 	image: File | string;
@@ -21,6 +23,7 @@ interface AnimalForm {
 interface AnimalFormProps {
 	onSubmit: SubmitHandler<AnimalForm>;
 	initialValues?: AnimalForm;
+	isLoading: any;
 }
 
 const allAnimalTypes = async () => {
@@ -38,8 +41,13 @@ const allUnits = async () => {
 	return response.data;
 };
 
-export default function AnimalForm({ onSubmit, initialValues }: AnimalFormProps) {
-	const { register, handleSubmit, setValue } = useForm<AnimalForm>({
+export default function AnimalForm({ onSubmit, initialValues, isLoading }: AnimalFormProps) {
+	const {
+		register,
+		handleSubmit,
+		setValue,
+		formState: { errors },
+	} = useForm<AnimalForm>({
 		defaultValues: initialValues, // Set default values for editing
 	});
 	const [selectedImage, setSelectedImage] = useState('');
@@ -70,7 +78,7 @@ export default function AnimalForm({ onSubmit, initialValues }: AnimalFormProps)
 		});
 	};
 
-	const handleImageChange = async (event) => {
+	const handleImageChange = async (event: any) => {
 		const file = event.target.files[0];
 		if (file) {
 			// const reader = new FileReader();
@@ -86,12 +94,13 @@ export default function AnimalForm({ onSubmit, initialValues }: AnimalFormProps)
 	const handleSubmitForm: SubmitHandler<AnimalForm> = (data) => {
 		data.image = selectedImage;
 
+		// console.log('Form Data', data);
 		onSubmit(data);
 	};
 	return (
 		<form onSubmit={handleSubmit(handleSubmitForm)}>
 			<div className="grid grid-cols-12  gap-4">
-				<div className="col-span-12 md:col-span-2">
+				<div className="col-span-12 md:col-span-3">
 					<div className="flex flex-col items-center justify-center w-full space-y-2">
 						<label
 							htmlFor="photo"
@@ -105,7 +114,7 @@ export default function AnimalForm({ onSubmit, initialValues }: AnimalFormProps)
 							width={100}
 							src={selectedImage || placeholder}
 							alt="Staff Avatar Image"
-							className="inline-flex items-center justify-center overflow-hidden rounded-md md:w-20 sm:h-10 md:h-20 sm:w-10 ring-2 ring-offset-1 ring-text-primary-light"
+							className="inline-flex items-center justify-center overflow-hidden rounded-md md:w-20 sm:h-10 md:h-20 sm:w-10 ring-2 ring-offset-1 ring-text-primary-light/20"
 						/>
 
 						<input
@@ -120,24 +129,25 @@ export default function AnimalForm({ onSubmit, initialValues }: AnimalFormProps)
 						<button
 							onClick={() => placeholderRef.current?.click()}
 							type="button"
-							className="inline-flex w-full items-center justify-center rounded-md text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 shadow text-box-four-light bg-text-primary-light hover:bg-text-secondary-light p-2"
+							className="inline-flex items-center justify-center rounded-md text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 shadow text-box-four-light bg-text-primary-light hover:bg-text-secondary-light p-1"
 						>
-							Change
+							Add Image
 						</button>
 					</div>
 				</div>
-				<div className="col-span-12 md:col-span-10 grid grid-cols-12 gap-2">
+				<div className="col-span-12 md:col-span-9 grid grid-cols-12 gap-2">
 					<div className="col-span-12 md:col-span-4">
 						<label
 							htmlFor="animalType"
 							className="block text-sm font-medium text-text-primary-light"
 						>
-							Type
+							Type<sup className="text-red-500 text-xs">*</sup>
 						</label>
 						<select
 							id="animalType"
 							onChange={(e) => setSelectedAnimalType(e.target.value)}
 							className="sm:text-sm w-full bg-box-four-light bg-opacity-70 border-1 focus:shadow-inner shadow-accent-300 focus:border-box-four-light  block p-2.5 h-8 px-3 py-1 shadow-box-four-light  rounded-md border border-box-four-light  text-sm font-medium leading-4 text-text-secondary-light  shadow-sm hover:bg-box-four-light focus:outline-none focus:ring-2 focus:ring-text-primary-light focus:ring-offset-1"
+							required
 						>
 							{/* Remove the disabled attribute */}
 							<option value="">--Type--</option>
@@ -153,13 +163,14 @@ export default function AnimalForm({ onSubmit, initialValues }: AnimalFormProps)
 							htmlFor="animalCategory"
 							className="block text-sm font-medium text-text-primary-light"
 						>
-							Category
+							Category<sup className="text-red-500 text-xs">*</sup>
 						</label>
 						<select
 							id="animalCategory"
 							onChange={(e) => setSelectedAnimalCategory(e.target.value)}
 							className="sm:text-sm w-full bg-box-four-light bg-opacity-70 border-1 focus:shadow-inner shadow-accent-300 focus:border-box-four-light  block p-2.5 h-8 px-3 py-1 shadow-box-four-light  rounded-md border border-box-four-light  text-sm font-medium leading-4 text-text-secondary-light  shadow-sm hover:bg-box-four-light focus:outline-none focus:ring-2 focus:ring-text-primary-light focus:ring-offset-1"
 							disabled={!selectedAnimalType}
+							required
 						>
 							{/* Remove the disabled attribute */}
 							<option value="">--Category--</option>
@@ -178,11 +189,11 @@ export default function AnimalForm({ onSubmit, initialValues }: AnimalFormProps)
 							htmlFor="animalBreed"
 							className="block text-sm font-medium text-text-primary-light"
 						>
-							Breed
+							Breed<sup className="text-red-500 text-xs">*</sup>
 						</label>
 						<select
 							id="animalBreed"
-							{...register('breedId')}
+							{...register('breedId', { required: true })}
 							className="sm:text-sm w-full bg-box-four-light bg-opacity-70 border-1 focus:shadow-inner shadow-accent-300 focus:border-box-four-light  block p-2.5 h-8 px-3 py-1 shadow-box-four-light  rounded-md border border-box-four-light  text-sm font-medium leading-4 text-text-secondary-light  shadow-sm hover:bg-box-four-light focus:outline-none focus:ring-2 focus:ring-text-primary-light focus:ring-offset-1"
 							disabled={!selectedAnimalCategory}
 						>
@@ -201,32 +212,37 @@ export default function AnimalForm({ onSubmit, initialValues }: AnimalFormProps)
 										</option>
 									))}
 						</select>
+						{errors.breedId?.type === 'required' && (
+							<FormInputAlert notification="First name is required" />
+						)}
 					</div>
 					<div className="col-span-12 md:col-span-6">
 						<label
 							htmlFor="tag"
 							className="block text-sm font-medium text-text-primary-light"
 						>
-							Animal Tag
+							Animal Tag<sup className="text-red-500 text-xs">*</sup>
 						</label>
 						<input
 							type="text"
 							id="tag"
-							{...register('tag')}
-							className="sm:text-sm w-full bg-box-four-light bg-opacity-70 border-1 focus:shadow-inner shadow-accent-300 focus:border-box-four-light  block p-2.5 h-8 px-3 py-1 shadow-box-four-light  rounded-md border border-box-four-light  text-sm font-medium leading-4 text-text-secondary-light  shadow-sm hover:bg-box-four-light focus:outline-none focus:ring-2 focus:ring-ocobrown-500 focus:ring-offset-1"
-							required
+							{...register('tag', { required: true })}
+							className="sm:text-sm w-full bg-box-four-light bg-opacity-70 border-1 focus:shadow-inner shadow-accent-300 focus:border-box-four-light  block p-2.5 h-8 px-3 py-1 shadow-box-four-light  rounded-md border border-box-four-light  text-sm font-medium leading-4 text-text-secondary-light  shadow-sm hover:bg-box-four-light focus:outline-none focus:ring-2 focus:ring-text-primary-light/10 focus:ring-offset-1"
 						/>
+						{errors.tag?.type === 'required' && (
+							<FormInputAlert notification="First name is required" />
+						)}
 					</div>
 					<div className="col-span-12 md:col-span-6">
 						<label
 							htmlFor="gender"
 							className="block text-sm font-medium text-text-primary-light"
 						>
-							Gender
+							Gender<sup className="text-red-500 text-xs">*</sup>
 						</label>
 						<select
 							id="gender"
-							{...register('genderId')}
+							{...register('genderId', { required: true })}
 							className="sm:text-sm w-full bg-box-four-light bg-opacity-70 border-1 focus:shadow-inner shadow-accent-300 focus:border-box-four-light  block p-2.5 h-8 px-3 py-1 shadow-box-four-light  rounded-md border border-box-four-light  text-sm font-medium leading-4 text-text-secondary-light  shadow-sm hover:bg-box-four-light focus:outline-none focus:ring-2 focus:ring-text-primary-light focus:ring-offset-1"
 						>
 							{/* Remove the disabled attribute */}
@@ -237,6 +253,9 @@ export default function AnimalForm({ onSubmit, initialValues }: AnimalFormProps)
 								</option>
 							))}
 						</select>
+						{errors.genderId?.type === 'required' && (
+							<FormInputAlert notification="gender is required" />
+						)}
 					</div>
 					<div className="col-span-12 md:col-span-4">
 						<label
@@ -267,7 +286,7 @@ export default function AnimalForm({ onSubmit, initialValues }: AnimalFormProps)
 								type="number"
 								id="birthWeight"
 								{...register('birthWeight')}
-								className="sm:text-sm w-full bg-box-four-light bg-opacity-70 border-1 focus:shadow-inner shadow-accent-300 h-8 focus:border-box-four-light  block pl-12 shadow-box-four-light  rounded-md border border-box-four-light  text-sm font-medium leading-4 text-text-secondary-light  shadow-sm hover:bg-box-four-light focus:outline-none focus:ring-2 focus:ring-ocobrown-500 focus:ring-offset-1"
+								className="sm:text-sm w-full bg-box-four-light bg-opacity-70 border-1 focus:shadow-inner shadow-accent-300 h-8 focus:border-box-four-light  block pl-12 shadow-box-four-light  rounded-md border border-box-four-light  text-sm font-medium leading-4 text-text-secondary-light  shadow-sm hover:bg-box-four-light focus:outline-none focus:ring-2 focus:ring-text-primary-light/10 focus:ring-offset-1"
 							/>
 						</div>
 					</div>
@@ -276,14 +295,17 @@ export default function AnimalForm({ onSubmit, initialValues }: AnimalFormProps)
 							htmlFor="birthDate"
 							className="block text-sm font-medium text-text-primary-light"
 						>
-							Birth Date
+							Birth Date<sup className="text-red-500 text-xs">*</sup>
 						</label>
 						<input
 							type="date"
 							id="birthDate"
-							{...register('birthDate')}
-							className="sm:text-sm w-full bg-box-four-light bg-opacity-70 border-1 focus:shadow-inner shadow-accent-300 focus:border-box-four-light  block p-2.5 h-8 px-3 py-1 shadow-box-four-light  rounded-md border border-box-four-light  text-sm font-medium leading-4 text-text-secondary-light  shadow-sm hover:bg-box-four-light focus:outline-none focus:ring-2 focus:ring-ocobrown-500 focus:ring-offset-1"
+							{...register('birthDate', { required: true })}
+							className="sm:text-sm w-full bg-box-four-light bg-opacity-70 border-1 focus:shadow-inner shadow-accent-300 focus:border-box-four-light  block p-2.5 h-8 px-3 py-1 shadow-box-four-light  rounded-md border border-box-four-light  text-sm font-medium leading-4 text-text-secondary-light  shadow-sm hover:bg-box-four-light focus:outline-none focus:ring-2 focus:ring-text-primary-light/10 focus:ring-offset-1"
 						/>
+						{errors.birthDate?.type === 'required' && (
+							<FormInputAlert notification="Birth date is required" />
+						)}
 					</div>
 					<div className="col-span-12 md:col-span-4">
 						<label
@@ -296,7 +318,7 @@ export default function AnimalForm({ onSubmit, initialValues }: AnimalFormProps)
 							type="date"
 							id="purchaseDate"
 							{...register('purchaseDate')}
-							className="sm:text-sm w-full bg-box-four-light bg-opacity-70 border-1 focus:shadow-inner shadow-accent-300 focus:border-box-four-light  block p-2.5 h-8 px-3 py-1 shadow-box-four-light  rounded-md border border-box-four-light  text-sm font-medium leading-4 text-text-secondary-light  shadow-sm hover:bg-box-four-light focus:outline-none focus:ring-2 focus:ring-ocobrown-500 focus:ring-offset-1"
+							className="sm:text-sm w-full bg-box-four-light bg-opacity-70 border-1 focus:shadow-inner shadow-accent-300 focus:border-box-four-light  block p-2.5 h-8 px-3 py-1 shadow-box-four-light  rounded-md border border-box-four-light  text-sm font-medium leading-4 text-text-secondary-light  shadow-sm hover:bg-box-four-light focus:outline-none focus:ring-2 focus:ring-text-primary-light/10 focus:ring-offset-1"
 						/>
 					</div>
 					<div className="col-span-12 md:col-span-6">
@@ -347,8 +369,34 @@ export default function AnimalForm({ onSubmit, initialValues }: AnimalFormProps)
 				<button
 					type="submit"
 					className="rounded-md shadow text-box-four-light bg-text-primary-light hover:bg-text-secondary-light p-2"
+					disabled={isLoading}
 				>
-					Submit
+					{isLoading ? (
+						<div className="flex items-center space-x-1">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								width="20"
+								height="20"
+								viewBox="0 0 24 24"
+							>
+								<path
+									fill="currentColor"
+									d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z"
+								>
+									<animateTransform
+										attributeName="transform"
+										dur="0.75s"
+										repeatCount="indefinite"
+										type="rotate"
+										values="0 12 12;360 12 12"
+									/>
+								</path>
+							</svg>
+							<span>Submitting...</span>
+						</div>
+					) : (
+						<span>Submit</span>
+					)}
 				</button>
 			</div>
 		</form>

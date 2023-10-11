@@ -11,7 +11,7 @@ export default function CreateBreedToggle({ setToggle }: ToggleProps) {
 	const queryClient = useQueryClient();
 	let toastId: string;
 
-	const { mutate } = useMutation(
+	const { mutate, isLoading } = useMutation(
 		async (data: any) => {
 			const newData = {
 				animalCategoryId: parseInt(data?.categoryId),
@@ -56,7 +56,7 @@ export default function CreateBreedToggle({ setToggle }: ToggleProps) {
 						<Icon icon="mdi:close" />
 					</button>
 				</div>
-				<AnimalBreedForm onSubmit={handleCreateBreed} />
+				<AnimalBreedForm onSubmit={handleCreateBreed} isLoading={isLoading} />
 			</div>
 		</div>
 	);
