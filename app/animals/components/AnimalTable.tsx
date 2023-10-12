@@ -1,24 +1,27 @@
+import { AnimalArray } from '@/types/Animal';
+import { useState } from 'react';
+
 interface AnimalTableProps {
-	data: any;
+	data: AnimalArray;
 }
 
 export default function AnimalTable({ data }: AnimalTableProps) {
 	return (
 		<>
 			<table className="table-auto w-full rounded-md">
-				<thead className="sticky z-10 divide-y divide-box-four-light/100 top-12 bg-box-four-light text-text-secondary-light">
+				<thead className="sticky z-10 top-0 divide-y divide-box-four-light/100  bg-box-four-light text-text-secondary-light">
 					<tr>
 						<th
 							scope="col"
-							className="sticky top-0 py-3.5 pl-4 pr-3 text-center text-sm font-semibold"
+							className="sticky  top-0 py-3.5 pl-4 pr-3 text-center text-sm font-semibold"
 						>
 							#
 						</th>
 						<th
 							scope="col"
-							className="sticky top-0 py-3.5 pl-4 pr-3 text-left text-sm font-semibold  sm:pl-6"
+							className="sticky top-0 px-3 py-3.5 text-left text-sm font-semibold "
 						>
-							Type
+							Tag
 						</th>
 						<th
 							scope="col"
@@ -28,9 +31,9 @@ export default function AnimalTable({ data }: AnimalTableProps) {
 						</th>
 						<th
 							scope="col"
-							className="sticky top-0 px-3 py-3.5 text-left text-sm font-semibold "
+							className="sticky top-0 py-3.5 pl-4 pr-3 text-left text-sm font-semibold  sm:pl-6"
 						>
-							Tag
+							Type
 						</th>
 						<th
 							scope="col"
@@ -56,11 +59,43 @@ export default function AnimalTable({ data }: AnimalTableProps) {
 					</tr>
 				</thead>
 				<tbody className="bg-white divide-y divide-gray-200">
-					{data?.map(({ item, i }: any) => (
-						<tr key={item?.id}>
+					{data?.map((item, index) => (
+						<tr
+							key={item?.id}
+							className={`hover:bg-slate-200/95 ${
+								index % 2 && index !== 0 ? 'bg-slate-200' : ''
+							}`}
+						>
 							<td className="px-3 py-2 text-sm text-center whitespace-nowrap text-text-secondary-light">
-								{i + 1}
+								{index + 1}
 							</td>
+							<td className="py-2 text-left  sm:pl-6 text-sm text-text-secondary-light">
+								{item?.tag}
+							</td>
+							<td className="py-2 text-left  sm:pl-6 text-sm text-text-secondary-light">
+								{item?.animalBreed?.animalCategory?.name}
+							</td>
+							<td className="py-2 text-left  sm:pl-6 text-sm text-text-secondary-light">
+								{item?.animalBreed?.animalCategory?.animalType?.name}
+							</td>
+							<td className="py-2 text-left  sm:pl-6 text-sm text-text-secondary-light">
+								{item?.animalBreed?.name}
+							</td>
+							<td className="py-2 text-left  sm:pl-6 text-sm text-text-secondary-light">
+								{item?.gender?.name}
+							</td>
+							<td className="py-2 text-left  sm:pl-6 text-sm text-text-secondary-light">
+								<span
+									className={`inline-flex rounded-full  px-2 text-xs font-semibold leading-5 ${
+										item?.isPregnant === true
+											? 'text-green-800 bg-green-100'
+											: 'text-red-800 bg-red-100'
+									}`}
+								>
+									{item?.isPregnant === true ? 'Pregnant' : 'Not Pregnant'}
+								</span>
+							</td>
+							<td className="relative py-2 pl-3 pr-4 text-sm font-medium text-right whitespace-nowrap sm:pr-6"></td>
 						</tr>
 					))}
 				</tbody>

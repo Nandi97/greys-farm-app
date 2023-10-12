@@ -6,23 +6,21 @@ import AnimalTable from './AnimalTable';
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 
-const allAnimals = async () => {
-	const response = await axios.get('/api/animals/get');
-	return response.data;
-};
 export default function AnimalTab() {
 	const [createToggle, setCreateToggle] = useState(false);
 	const [editToggle, setEditToggle] = useState(false);
-	const [searchParam, setSearchParam] = useState<string | null>(null);
+	const [searchParam, setSearchParam] = useState<any>();
 
-	const { data: animals } = useQuery({
-		queryFn: allAnimals,
-		queryKey: ['animals'],
-	});
+	const { data: animals } = useQuery(['animals', searchParam], () =>
+		axios
+			.get(`/api/animals/get`, {
+				params: { searchParam },
+			})
+			.then((response) => response.data)
+	);
 
 	const newAnimal = () => {
 		// console.log('new Animal');
-
 		setCreateToggle(true);
 	};
 
@@ -41,10 +39,16 @@ export default function AnimalTab() {
 	const handleSearch = (searchInput: any) => {
 		setSearchParam(searchInput);
 	};
+
+	// console.log('Animals:', animals);
+	// console.log('Search Input:', searchParam);
+
 	return (
 		<>
 			<div className="w-full flex justify-between items-center border-b py-1">
-				<span className="text-text-primary-light font-medium">Animal</span>
+				<div className="flex items-center space-x-2">
+					<span className="text-text-primary-light font-medium">Animals</span>
+				</div>
 				<div className="flex items-center space-x-1 px-4">
 					<SearchInput onSearch={handleSearch} />
 					<OptDropdown optBtn={headerOptBtnTxt} optionsList={headerOptionsList} />

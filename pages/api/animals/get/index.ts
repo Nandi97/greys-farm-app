@@ -4,9 +4,29 @@ import prisma from '@/lib/prisma';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 	if (req.method === 'GET') {
 		try {
+			const searchParam: any = req.query.searchParam || '';
+
 			const data = await prisma.animal.findMany({
 				orderBy: {
 					id: 'asc',
+				},
+				where: {
+					OR: [
+						{
+							tag: {
+								contains: searchParam,
+								mode: 'insensitive',
+							},
+						},
+						{
+							animalBreed: {
+								name: {
+									contains: searchParam,
+									mode: 'insensitive',
+								},
+							},
+						},
+					],
 				},
 				include: {
 					animalBreed: {
@@ -16,6 +36,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 									animalType: true,
 								},
 							},
+						},
+					},
+					gender: {
+						select: {
+							name: true,
 						},
 					},
 				},

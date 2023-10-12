@@ -92,7 +92,7 @@ export default function BreedTab() {
 	return (
 		<>
 			<div className="w-full flex justify-between items-center border-b py-1">
-				<span className="text-text-primary-light font-medium">Animal Breeds</span>
+				.<span className="text-text-primary-light font-medium">Animal Breeds</span>
 				<div className="flex items-center space-x-1 px-4">
 					<OptDropdown optBtn={headerOptBtnTxt} optionsList={headerOptionsList} />
 				</div>

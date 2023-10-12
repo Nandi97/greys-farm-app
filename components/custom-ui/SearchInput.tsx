@@ -17,7 +17,8 @@ export default function SearchInput({ onSearch }: any) {
 		};
 	}, [searchInput, onSearch]);
 
-	const handleInputChange = (event: any) => {
+	const handleInputChange = (event: React.FormEvent) => {
+		event.preventDefault();
 		setSearchInput(event?.target?.value);
 	};
 	return (
