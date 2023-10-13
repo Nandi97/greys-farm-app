@@ -40,14 +40,14 @@ export default function CreateAnimalToggle({ setToggle }: ToggleProps) {
 			},
 			onSuccess: (data) => {
 				toast.success('Animal Category has been Created', { id: toastId });
-				queryClient.invalidateQueries(['animalCategories']);
+				queryClient.invalidateQueries(['animals']);
 				setToggle(false);
 			},
 		}
 	);
 
 	const handleCreateAnimal = (data: any) => {
-		console.log('Creating Animal');
+		// console.log('Creating Animal:', data);
 
 		mutate(data);
 	};

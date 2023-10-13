@@ -1,3 +1,4 @@
+import OptDropdown from '@/components/custom-ui/OptDropdown';
 import { AnimalArray } from '@/types/Animal';
 import { useState } from 'react';
 
@@ -6,6 +7,22 @@ interface AnimalTableProps {
 }
 
 export default function AnimalTable({ data }: AnimalTableProps) {
+	const editAnimal = () => {
+		console.log('Edit Animal');
+	};
+
+	const headerOptBtnTxt = {
+		icon: 'heroicons:ellipsis-vertical',
+		// name: 'Options',
+		buttonClassName:
+			'inline-flex w-full items-center justify-center rounded-md text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 rounded-m text-box-four-light hover:bg-box-four-light p-2 text-text-secondary-light',
+		iconClassName:
+			'object-contain p-px text-xl  border-opacity-30 hover:bg-box-four-light rounded-md',
+	};
+
+	const headerOptionsList = [
+		{ name: 'Edit', action: editAnimal, icon: 'heroicons:pencil-square' },
+	];
 	return (
 		<>
 			<table className="table-auto w-full rounded-md">
@@ -95,7 +112,12 @@ export default function AnimalTable({ data }: AnimalTableProps) {
 									{item?.isPregnant === true ? 'Pregnant' : 'Not Pregnant'}
 								</span>
 							</td>
-							<td className="relative py-2 pl-3 pr-4 text-sm font-medium text-right whitespace-nowrap sm:pr-6"></td>
+							<td className="relative py-2 pl-3 pr-4 text-sm font-medium text-right whitespace-nowrap sm:pr-6">
+								<OptDropdown
+									optBtn={headerOptBtnTxt}
+									optionsList={headerOptionsList}
+								/>
+							</td>
 						</tr>
 					))}
 				</tbody>

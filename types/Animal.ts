@@ -1,7 +1,7 @@
 export type Animal = {
 	id: number;
 	tag: string;
-	image?: string;
+	image: string;
 	status: boolean;
 	genderId: number;
 	breedId: number;
@@ -42,7 +42,7 @@ export type Animal = {
 export type AnimalArray = {
 	id: number;
 	tag: string;
-	image?: string;
+	image: string;
 	status: boolean;
 	genderId: number;
 	breedId: number;

@@ -5,11 +5,13 @@ import { useState } from 'react';
 import AnimalTable from './AnimalTable';
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
+import AnimalCard from './AnimalCard';
 
 export default function AnimalTab() {
 	const [createToggle, setCreateToggle] = useState(false);
 	const [editToggle, setEditToggle] = useState(false);
 	const [searchParam, setSearchParam] = useState<any>();
+	const [defaultView, setDefaultView] = useState(false);
 
 	const { data: animals } = useQuery(['animals', searchParam], () =>
 		axios
@@ -19,9 +21,19 @@ export default function AnimalTab() {
 			.then((response) => response.data)
 	);
 
+	// console.log('Animals:', animals);
+
 	const newAnimal = () => {
 		// console.log('new Animal');
 		setCreateToggle(true);
+	};
+
+	const handleViewChange = () => {
+		if (defaultView === false) {
+			setDefaultView(true);
+		} else {
+			setDefaultView(false);
+		}
 	};
 
 	// Header Dropdown
@@ -34,14 +46,18 @@ export default function AnimalTab() {
 			'object-contain p-px text-xl  border-opacity-30 hover:bg-box-four-light rounded-md',
 	};
 
-	const headerOptionsList = [{ name: 'New Animal', action: newAnimal, icon: 'heroicons:plus' }];
+	const headerOptionsList = [
+		{ name: 'New Animal', action: newAnimal, icon: 'heroicons:plus' },
+		{
+			name: 'Change View',
+			action: handleViewChange,
+			icon: 'material-symbols:change-circle-outline',
+		},
+	];
 
 	const handleSearch = (searchInput: any) => {
 		setSearchParam(searchInput);
 	};
-
-	// console.log('Animals:', animals);
-	// console.log('Search Input:', searchParam);
 
 	return (
 		<>
@@ -55,7 +71,11 @@ export default function AnimalTab() {
 				</div>
 			</div>
 			<div className="overflow-y-auto p-2 flex flex-col md:flex-row">
-				<AnimalTable data={animals} />
+				{defaultView === false ? (
+					<AnimalTable data={animals} />
+				) : (
+					<AnimalCard data={animals} />
+				)}
 			</div>
 
 			{createToggle && <CreateAnimalToggle setToggle={setCreateToggle} />}

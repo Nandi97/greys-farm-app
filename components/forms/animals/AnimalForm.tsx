@@ -1,10 +1,9 @@
 import Image from 'next/image';
 import placeholder from '@/public/assets/images/image_placeholder.jpg';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
-import { Icon } from '@iconify/react/dist/iconify.js';
 import FormInputAlert from '@/components/custom-ui/FormFieldAlert';
 
 interface AnimalForm {
@@ -48,17 +47,20 @@ export default function AnimalForm({ onSubmit, initialValues, isLoading }: Anima
 		setValue,
 		formState: { errors },
 	} = useForm<AnimalForm>({
-		defaultValues: initialValues, // Set default values for editing
+		defaultValues: initialValues,
 	});
 	const [selectedImage, setSelectedImage] = useState('');
 	const [selectedAnimalType, setSelectedAnimalType] = useState<string | null>(null);
 	const [selectedAnimalCategory, setSelectedAnimalCategory] = useState<string | null>(null);
 	const placeholderRef = useRef<HTMLInputElement>(null);
+	const [category, setCategory] = useState<any>();
+	const [animalCategory, setAnimalCategory] = useState<any>();
 
 	const { data: animalTypes } = useQuery({
 		queryFn: allAnimalTypes,
 		queryKey: ['animalTypes'],
 	});
+
 	const { data: genders } = useQuery({
 		queryFn: allGenders,
 		queryKey: ['genders'],
@@ -68,6 +70,14 @@ export default function AnimalForm({ onSubmit, initialValues, isLoading }: Anima
 		queryFn: allUnits,
 		queryKey: ['units'],
 	});
+
+	const { data: animals } = useQuery(['animals', category], () =>
+		axios
+			.get(`/api/animals/get/byCategories`, {
+				params: { category },
+			})
+			.then((response) => response.data)
+	);
 
 	const convertToBase64 = (file: File): Promise<string> => {
 		return new Promise((resolve, reject) => {
@@ -81,11 +91,6 @@ export default function AnimalForm({ onSubmit, initialValues, isLoading }: Anima
 	const handleImageChange = async (event: any) => {
 		const file = event.target.files[0];
 		if (file) {
-			// const reader = new FileReader();
-			// reader.onload = (e) => {
-			// 	setSelectedImage(e.target.result);
-			// };
-			// reader.readAsDataURL(file);
 			const base64Image = await convertToBase64(file);
 			setSelectedImage(base64Image);
 		}
@@ -94,7 +99,6 @@ export default function AnimalForm({ onSubmit, initialValues, isLoading }: Anima
 	const handleSubmitForm: SubmitHandler<AnimalForm> = (data) => {
 		data.image = selectedImage;
 
-		// console.log('Form Data', data);
 		onSubmit(data);
 	};
 	return (
@@ -167,7 +171,10 @@ export default function AnimalForm({ onSubmit, initialValues, isLoading }: Anima
 						</label>
 						<select
 							id="animalCategory"
-							onChange={(e) => setSelectedAnimalCategory(e.target.value)}
+							onChange={(e) => {
+								setSelectedAnimalCategory(e.target.value),
+									setCategory(e.target.value);
+							}}
 							className="sm:text-sm w-full bg-box-four-light bg-opacity-70 border-1 focus:shadow-inner shadow-accent-300 focus:border-box-four-light  block p-2.5 h-8 px-3 py-1 shadow-box-four-light  rounded-md border border-box-four-light  text-sm font-medium leading-4 text-text-secondary-light  shadow-sm hover:bg-box-four-light focus:outline-none focus:ring-2 focus:ring-text-primary-light focus:ring-offset-1"
 							disabled={!selectedAnimalType}
 							required
@@ -335,11 +342,13 @@ export default function AnimalForm({ onSubmit, initialValues, isLoading }: Anima
 						>
 							{/* Remove the disabled attribute */}
 							<option value="">--Dam--</option>
-							{genders?.map((item: any) => (
-								<option key={item?.id} value={item?.id}>
-									{item?.name}
-								</option>
-							))}
+							{animals?.map((item: any, index) =>
+								item?.gender?.name === 'Female' ? (
+									<option key={item?.id} value={item?.id}>
+										{item?.tag}
+									</option>
+								) : null
+							)}
 						</select>
 					</div>
 					<div className="col-span-12 md:col-span-6">
@@ -356,11 +365,13 @@ export default function AnimalForm({ onSubmit, initialValues, isLoading }: Anima
 						>
 							{/* Remove the disabled attribute */}
 							<option value="">--Sire--</option>
-							{genders?.map((item: any) => (
-								<option key={item?.id} value={item?.id}>
-									{item?.name}
-								</option>
-							))}
+							{animals?.map((item: any, index) =>
+								item?.gender?.name === 'Male' ? (
+									<option key={item?.id} value={item?.id}>
+										{item?.tag}
+									</option>
+								) : null
+							)}
 						</select>
 					</div>
 				</div>
