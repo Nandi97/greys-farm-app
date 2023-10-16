@@ -23,6 +23,7 @@ interface AnimalFormProps {
 	onSubmit: SubmitHandler<AnimalForm>;
 	initialValues?: AnimalForm;
 	isLoading: any;
+	animalValues?: any;
 }
 
 const allAnimalTypes = async () => {
@@ -40,7 +41,12 @@ const allUnits = async () => {
 	return response.data;
 };
 
-export default function AnimalForm({ onSubmit, initialValues, isLoading }: AnimalFormProps) {
+export default function AnimalForm({
+	onSubmit,
+	initialValues,
+	isLoading,
+	animalValues,
+}: AnimalFormProps) {
 	const {
 		register,
 		handleSubmit,
@@ -60,6 +66,20 @@ export default function AnimalForm({ onSubmit, initialValues, isLoading }: Anima
 		queryFn: allAnimalTypes,
 		queryKey: ['animalTypes'],
 	});
+
+	// console.log('Animal Values', animalValues);
+	useEffect(() => {
+		if (initialValues && animalValues) {
+			const fetchTypeAndCategory = () => {
+				const initialAnimalType = animalValues.animalBreed.animalCategory.animalType.id;
+
+				const initialAnimalCategory = animalValues.animalBreed.animalCategory.id;
+				setSelectedAnimalType(initialAnimalType);
+				setSelectedAnimalCategory(initialAnimalCategory);
+			};
+			fetchTypeAndCategory();
+		}
+	}, [initialValues, animalValues]);
 
 	const { data: genders } = useQuery({
 		queryFn: allGenders,
@@ -96,6 +116,8 @@ export default function AnimalForm({ onSubmit, initialValues, isLoading }: Anima
 		}
 	};
 
+	console.log('Initial values', initialValues);
+
 	const handleSubmitForm: SubmitHandler<AnimalForm> = (data) => {
 		data.image = selectedImage;
 
@@ -116,7 +138,7 @@ export default function AnimalForm({ onSubmit, initialValues, isLoading }: Anima
 						<Image
 							height={100}
 							width={100}
-							src={selectedImage || placeholder}
+							src={selectedImage || initialValues?.image || placeholder}
 							alt="Staff Avatar Image"
 							className="inline-flex items-center justify-center overflow-hidden rounded-md md:w-20 sm:h-10 md:h-20 sm:w-10 ring-2 ring-offset-1 ring-text-primary-light/20"
 						/>
@@ -149,6 +171,7 @@ export default function AnimalForm({ onSubmit, initialValues, isLoading }: Anima
 						</label>
 						<select
 							id="animalType"
+							value={selectedAnimalType}
 							onChange={(e) => setSelectedAnimalType(e.target.value)}
 							className="sm:text-sm w-full bg-box-four-light bg-opacity-70 border-1 focus:shadow-inner shadow-accent-300 focus:border-box-four-light  block p-2.5 h-8 px-3 py-1 shadow-box-four-light  rounded-md border border-box-four-light  text-sm font-medium leading-4 text-text-secondary-light  shadow-sm hover:bg-box-four-light focus:outline-none focus:ring-2 focus:ring-text-primary-light focus:ring-offset-1"
 							required
@@ -171,6 +194,7 @@ export default function AnimalForm({ onSubmit, initialValues, isLoading }: Anima
 						</label>
 						<select
 							id="animalCategory"
+							value={selectedAnimalCategory}
 							onChange={(e) => {
 								setSelectedAnimalCategory(e.target.value),
 									setCategory(e.target.value);
@@ -338,11 +362,12 @@ export default function AnimalForm({ onSubmit, initialValues, isLoading }: Anima
 						<select
 							id="dam"
 							{...register('damId')}
+							value={initialValues?.damId}
 							className="sm:text-sm w-full bg-box-four-light bg-opacity-70 border-1 focus:shadow-inner shadow-accent-300 focus:border-box-four-light  block p-2.5 h-8 px-3 py-1 shadow-box-four-light  rounded-md border border-box-four-light  text-sm font-medium leading-4 text-text-secondary-light  shadow-sm hover:bg-box-four-light focus:outline-none focus:ring-2 focus:ring-text-primary-light focus:ring-offset-1"
 						>
 							{/* Remove the disabled attribute */}
 							<option value="">--Dam--</option>
-							{animals?.map((item: any, index) =>
+							{animals?.map((item: any) =>
 								item?.gender?.name === 'Female' ? (
 									<option key={item?.id} value={item?.id}>
 										{item?.tag}
@@ -361,11 +386,12 @@ export default function AnimalForm({ onSubmit, initialValues, isLoading }: Anima
 						<select
 							id="sire"
 							{...register('sireId')}
+							value={initialValues?.sireId}
 							className="sm:text-sm w-full bg-box-four-light bg-opacity-70 border-1 focus:shadow-inner shadow-accent-300 focus:border-box-four-light  block p-2.5 h-8 px-3 py-1 shadow-box-four-light  rounded-md border border-box-four-light  text-sm font-medium leading-4 text-text-secondary-light  shadow-sm hover:bg-box-four-light focus:outline-none focus:ring-2 focus:ring-text-primary-light focus:ring-offset-1"
 						>
 							{/* Remove the disabled attribute */}
 							<option value="">--Sire--</option>
-							{animals?.map((item: any, index) =>
+							{animals?.map((item: any) =>
 								item?.gender?.name === 'Male' ? (
 									<option key={item?.id} value={item?.id}>
 										{item?.tag}

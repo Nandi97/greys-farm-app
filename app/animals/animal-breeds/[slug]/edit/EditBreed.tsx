@@ -30,7 +30,7 @@ export default function EditBreedToggle({
 		description: animalBreed?.description,
 	};
 
-	const { mutate } = useMutation(
+	const { mutate, isLoading } = useMutation(
 		async (data: any) => {
 			const newData = {
 				animalCategoryId: parseInt(data?.categoryId),
@@ -75,7 +75,11 @@ export default function EditBreedToggle({
 						<Icon icon="mdi:close" />
 					</button>
 				</div>
-				<AnimalBreedForm onSubmit={handleEditCategory} initialValues={initialBreedData} />
+				<AnimalBreedForm
+					onSubmit={handleEditCategory}
+					initialValues={initialBreedData}
+					isLoading={isLoading}
+				/>
 			</div>
 		</div>
 	);

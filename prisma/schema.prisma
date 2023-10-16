@@ -230,8 +230,8 @@ model animal {
   createdAt   DateTime?  @default(now()) @db.Timestamptz(3)
   updatedAt   DateTime?  @updatedAt @db.Timestamptz(3)
   deletedAt   DateTime?  @db.Timestamptz(3)
-  cow         breeding[] @relation(name: "female_cow")
-  bull        breeding[] @relation(name: "male_cow")
+  cow         breeding[] @relation(name: "female")
+  bull        breeding[] @relation(name: "male")
   sires       animal[]   @relation(name: "sires")
   dams        animal[]   @relation(name: "dams")
 }
@@ -261,11 +261,11 @@ model breedingMethod {
 model breeding {
   id    Int    @id @default(autoincrement())
   cowId Int // ID of the animal involved in the breeding event
-  cow   animal @relation(name: "female_cow", fields: [cowId], references: [id])
+  cow   animal @relation(name: "female", fields: [cowId], references: [id])
 
   matingDate       DateTime // Date of the mating/breeding event
   bullId           Int
-  bull             animal         @relation(name: "male_cow", fields: [bullId], references: [id]) // Details of the bull used for breeding
+  bull             animal         @relation(name: "male", fields: [bullId], references: [id]) // Details of the bull used for breeding
   breedingMethodId Int // Type of breeding (e.g., natural, artificial insemination, etc.)
   breedingMethod   breedingMethod @relation(fields: [breedingMethodId], references: [id])
   pregnancy        Boolean?       @default(true)

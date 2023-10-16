@@ -1,14 +1,19 @@
 import OptDropdown from '@/components/custom-ui/OptDropdown';
 import { AnimalArray } from '@/types/Animal';
 import { useState } from 'react';
+import EditAnimalToggle from '../[slug]/edit/EditAnimal';
 
 interface AnimalTableProps {
 	data: AnimalArray;
 }
 
 export default function AnimalTable({ data }: AnimalTableProps) {
-	const editAnimal = () => {
+	const [editToggle, setEditToggle] = useState(false);
+	const [animalId, setAnimalId] = useState(0);
+	const editAnimal = (animalId: number) => {
 		console.log('Edit Animal');
+		setAnimalId(animalId);
+		setEditToggle(true);
 	};
 
 	const headerOptBtnTxt = {
@@ -21,7 +26,7 @@ export default function AnimalTable({ data }: AnimalTableProps) {
 	};
 
 	const headerOptionsList = [
-		{ name: 'Edit', action: editAnimal, icon: 'heroicons:pencil-square' },
+		// { name: 'Edit', action: editAnimal, icon: 'heroicons:pencil-square' },
 	];
 	return (
 		<>
@@ -115,13 +120,20 @@ export default function AnimalTable({ data }: AnimalTableProps) {
 							<td className="relative py-2 pl-3 pr-4 text-sm font-medium text-right whitespace-nowrap sm:pr-6">
 								<OptDropdown
 									optBtn={headerOptBtnTxt}
-									optionsList={headerOptionsList}
+									optionsList={[
+										{
+											name: 'Edit',
+											action: () => editAnimal(item?.id),
+											icon: 'heroicons:pencil-square',
+										},
+									]}
 								/>
 							</td>
 						</tr>
 					))}
 				</tbody>
 			</table>
+			{editToggle && <EditAnimalToggle setToggle={setEditToggle} url={animalId} />}
 		</>
 	);
 }
