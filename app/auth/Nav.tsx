@@ -30,17 +30,14 @@ export default async function Nav() {
 						<span className="text-text-secondary-light">Farm</span>
 					</div>
 				</Link>
-				{/* {session?.user && (
+				{session && (
 					<div className="pt-1">
 						<NavMenu />
 					</div>
-				)} */}
-				<div className="pt-1">
-					<NavMenu />
-				</div>
+				)}
 			</div>
 			<div className="flex space-x-2 items-center justify-center h-full">
-				{!session?.user && <Login />}
+				{/* {!session?.user && <Login />} */}
 				{session?.user && (
 					<>
 						{/* <Menu /> */}

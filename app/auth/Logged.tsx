@@ -52,11 +52,11 @@ export default function Logged({ image, name, designation }: User) {
 						leaveTo="transform opacity-0 scale-95"
 					>
 						<Menu.Items className="absolute w-40 right-0 mt-2 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-							<div className="px-1 py-1 flex flex-col text-secondary-700 font-semibold text-base divide-y">
+							<div className="px-1 py-1 flex flex-col font-semibold text-text-primary-light text-base divide-y">
 								<Menu.Item>
 									{({ active }) => (
 										<Link
-											className="flex items-center p-1 hover:rounded-md  hover:bg-primary-400 hover:text-white"
+											className="flex items-center p-1 hover:rounded-md hover:bg-box-one-light hover:text-text-secondary-light"
 											href={`/${name}`}
 										>
 											My Profile{' '}
@@ -67,7 +67,7 @@ export default function Logged({ image, name, designation }: User) {
 									{({ active }) => (
 										<button
 											type="button"
-											className="flex items-center p-1 hover:rounded-md justify-between hover:bg-primary-400 hover:text-white"
+											className="flex items-center p-1 hover:rounded-md justify-between hover:bg-box-one-light hover:text-text-secondary-light"
 											onClick={() => signOut()}
 										>
 											<span>Sign Out</span>
